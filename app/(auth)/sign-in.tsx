@@ -2,17 +2,39 @@ import CustomButton from "@/components/CustomButton";
 import InputField from "@/components/InputField";
 import OAuth from "@/components/OAuth";
 import { icons, images } from "@/constants";
-import { Link } from "expo-router";
-import React, { useState } from "react";
+import { useSignIn } from "@clerk/clerk-expo";
+import { Link, useRouter } from "expo-router";
+import React, { useCallback, useState } from "react";
 import { Image, ScrollView, Text, View } from "react-native";
 
 const SignIn = () => {
+  const { isLoaded, signIn, setActive } = useSignIn();
+  const router = useRouter();
+
   const [form, setForm] = useState({
     email: "",
     password: "",
   });
 
-  const onSignInPress = async () => {}
+  const onSignInPress = useCallback(async () => {
+    if (!isLoaded) return;
+
+    try {
+      const signInAttempt = await signIn.create({
+        identifier: form.email,
+        password: form.password,
+      });
+
+      if (signInAttempt.status === "complete") {
+        await setActive({ session: signInAttempt.createdSessionId });
+        router.replace("/(root)/(tabs)/home");
+      } else {
+        console.error(JSON.stringify(signInAttempt, null, 2));
+      }
+    } catch (error: any) {
+      console.error(JSON.stringify(error, null, 2));
+    }
+  }, [isLoaded, form.email, form.password]);
 
   return (
     <ScrollView className="flex-1 bg-white">
@@ -41,13 +63,20 @@ const SignIn = () => {
             onChangeText={(value) => setForm({ ...form, password: value })}
           />
 
-          <CustomButton title="Log In" onPress={onSignInPress} className="mt-6" />
+          <CustomButton
+            title="Log In"
+            onPress={onSignInPress}
+            className="mt-6"
+          />
 
           <OAuth />
 
-          <Link href="/sign-up" className="text-lg text-center text-general-200 mt-10">
-          <Text>Don't have an account?&nbsp;</Text>
-          <Text className="text-primary-500">Register</Text>
+          <Link
+            href="/sign-up"
+            className="text-lg text-center text-general-200 mt-10"
+          >
+            <Text>Don't have an account?&nbsp;</Text>
+            <Text className="text-primary-500">Register</Text>
           </Link>
         </View>
 
