@@ -26,7 +26,7 @@ const PlaceAutocompleteInput = ({
   useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedQuery(query);
-    }, 500);
+    }, 200);
 
     return () => clearTimeout(handler);
   }, [query]);
@@ -67,9 +67,14 @@ const PlaceAutocompleteInput = ({
     }
   }, [debouncedQuery]);
 
+  const formatLocation = (location: string, maxLength: number = 30) => {
+    if (!location) return "Where do you want to go?"; // Default placeholder
+    return location.length > maxLength ? location.slice(0, maxLength) + "..." : location;
+  };
+
   return (
     <View
-      className={`flex flex-row items-center justify-center relative z-50 rounded-xl ${containerStyle} mb-5`}
+      className={`flex flex-row items-center border-primary-200 justify-center relative rounded-xl ${containerStyle} mb-5`}
       style={{ borderRadius: 10, shadowColor: "#d4d4d4", elevation: 3 }}
     >
       <View className="absolute top-4 z-10 left-3">
@@ -83,7 +88,7 @@ const PlaceAutocompleteInput = ({
       <Autocomplete
         data={suggestions}
         value={query}
-        placeholder={initialLocation ?? "Where do you want to go?"}
+        placeholder={formatLocation(initialLocation!)}
         placeholderTextColor="gray"
         onChangeText={(text) => setQuery(text)}
         inputContainerStyle={{
@@ -101,17 +106,18 @@ const PlaceAutocompleteInput = ({
           width: "auto",
           borderRadius: 200,
           borderWidth: 0,
+          
         }}
         listContainerStyle={{
           borderWidth: 0,
           shadowOpacity: 0,
-          elevation: 0,
+          elevation: 5,
           position: "absolute",
-          top: 50, // Prevents overlaying on input
+          top: 60, // Prevents overlaying on input
           width: "100%",
           backgroundColor: "white",
           borderRadius: 10,
-          zIndex: 99,
+          zIndex: 1000,
         }}
         flatListProps={{
           keyExtractor: (item) => item.place_id,
@@ -128,13 +134,13 @@ const PlaceAutocompleteInput = ({
                 setQuery(item.display_name);
                 setSuggestions([]);
                 handlePress({
-                  latitude: item?.lat!,
-                  longitude: item?.lon!,
+                  latitude: Number(item?.lat!),
+                  longitude: Number(item?.lon!),
                   address: item?.display_name!,
                 });
               }}
             >
-              <Text style={{ padding: 5, borderBottomWidth: 0 }}>
+              <Text style={{ padding: 5,  }}>
                 {item.display_name}
               </Text>
             </TouchableOpacity>

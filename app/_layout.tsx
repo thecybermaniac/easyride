@@ -53,7 +53,7 @@ export default function RootLayout() {
           </Stack>
         </ClerkLoaded>
       </ClerkProvider>
-      <StatusBar style="auto" />
+      <StatusBar style="dark" />
     </>
   );
 }

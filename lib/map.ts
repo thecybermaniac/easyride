@@ -90,26 +90,39 @@ export const calculateDriverTimes = async ({
     !userLongitude ||
     !destinationLatitude ||
     !destinationLongitude
-  )
-    return;
+  ) return;
 
   try {
     const timesPromises = markers.map(async (marker) => {
+      // OSRM API to calculate travel time to user
       const responseToUser = await fetch(
-        `https://maps.googleapis.com/maps/api/directions/json?origin=${marker.latitude},${marker.longitude}&destination=${userLatitude},${userLongitude}&key=${directionsAPI}`
+        `https://router.project-osrm.org/route/v1/driving/${marker.longitude},${marker.latitude};${userLongitude},${userLatitude}?overview=false`
       );
       const dataToUser = await responseToUser.json();
-      const timeToUser = dataToUser.routes[0].legs[0].duration.value; // Time in seconds
 
+      if (!dataToUser.routes || dataToUser.routes.length === 0) {
+        console.error("No routes found in responseToUser:", dataToUser);
+        return { ...marker, time: null, price: null };
+      }
+
+      const timeToUser = dataToUser.routes[0].duration / 60; // Convert seconds to minutes
+
+      // OSRM API to calculate travel time to destination
       const responseToDestination = await fetch(
-        `https://maps.googleapis.com/maps/api/directions/json?origin=${userLatitude},${userLongitude}&destination=${destinationLatitude},${destinationLongitude}&key=${directionsAPI}`
+        `https://router.project-osrm.org/route/v1/driving/${userLongitude},${userLatitude};${destinationLongitude},${destinationLatitude}?overview=false`
       );
       const dataToDestination = await responseToDestination.json();
-      const timeToDestination =
-        dataToDestination.routes[0].legs[0].duration.value; // Time in seconds
 
-      const totalTime = (timeToUser + timeToDestination) / 60; // Total time in minutes
-      const price = (totalTime * 0.5).toFixed(2); // Calculate price based on time
+      if (!dataToDestination.routes || dataToDestination.routes.length === 0) {
+        console.error("No routes found in responseToDestination:", dataToDestination);
+        return { ...marker, time: null, price: null };
+      }
+
+      const timeToDestination = dataToDestination.routes[0].duration / 60; // Convert seconds to minutes
+
+      // Calculate total travel time & price
+      const totalTime = timeToUser + timeToDestination;
+      const price = (totalTime * 0.5).toFixed(2); // Example price calculation
 
       return { ...marker, time: totalTime, price };
     });
@@ -119,3 +132,7 @@ export const calculateDriverTimes = async ({
     console.error("Error calculating driver times:", error);
   }
 };
+
+
+
+
