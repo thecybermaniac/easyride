@@ -3,6 +3,8 @@ import { Platform } from "react-native";
 import { TokenCache } from "@clerk/clerk-expo/dist/cache";
 import * as Linking from "expo-linking";
 import { fetchAPI } from "./fetch";
+import { useUser } from "@clerk/clerk-expo";
+import { updatePersonalInformation } from "./actions";
 
 const createTokenCache = (): TokenCache => {
   return {
@@ -75,5 +77,43 @@ export const googleOAuth = async (startOAuthFlow: any) => {
       code: error.code,
       message: error?.errors[0]?.longMessage,
     };
+  }
+};
+
+export const updateUser = async ({
+  user,
+  name,
+  newPassword,
+  currentPassword,
+}: {
+  user: any;
+  name: string;
+  newPassword: string;
+  currentPassword: string;
+}) => {
+  try {
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    // Update name if provided
+    if (name !== "") {
+      await user.update({
+        firstName: name.split(" ")[0] || "",
+        lastName: name.split(" ")[1] || "",
+      });
+    } else if (currentPassword !== "" && newPassword !== "") {
+      await user?.updatePassword({
+        currentPassword: currentPassword,
+        newPassword: newPassword,
+      });
+    } else {
+      return { success: false, message: "A required field is missing" }
+    }
+
+    return { success: true, message: "User updated successfully" };
+  } catch (error: any) {
+    console.error("Error updating user:", error);
+    return { success: false, message: error.message };
   }
 };

@@ -8,7 +8,7 @@ import "../global.css";
 import React from "react";
 
 import { ClerkProvider, ClerkLoaded } from "@clerk/clerk-expo";
-import { Slot } from "expo-router";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { tokenCache } from "@/lib/auth";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
@@ -42,7 +42,7 @@ export default function RootLayout() {
   }
 
   return (
-    <>
+    <GestureHandlerRootView style={{ flex: 1 }}>
       <ClerkProvider publishableKey={publishableKey} tokenCache={tokenCache}>
         <ClerkLoaded>
           <Stack>
@@ -54,6 +54,6 @@ export default function RootLayout() {
         </ClerkLoaded>
       </ClerkProvider>
       <StatusBar style="dark" />
-    </>
+    </GestureHandlerRootView>
   );
 }

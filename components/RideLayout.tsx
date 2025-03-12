@@ -3,8 +3,6 @@ import {
   Text,
   TouchableOpacity,
   Image,
-  KeyboardAvoidingView,
-  Platform,
 } from "react-native";
 import React, { useRef } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";

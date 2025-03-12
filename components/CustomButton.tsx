@@ -40,6 +40,7 @@ const CustomButton = ({
   IconLeft,
   IconRight,
   className,
+  disabled,
   ...props
 }: ButtonProps) => {
   return (
@@ -49,7 +50,8 @@ const CustomButton = ({
         bgVariant
       )} ${className}`}
       {...props}
-      activeOpacity={0.8}
+      activeOpacity={disabled ? 0.4 : 0.8}
+      disabled={disabled}
     >
       {IconLeft && <IconLeft />}
       <Text className={`text-lg font-bold ${getTextVariantStyle(textVariant)}`}>
