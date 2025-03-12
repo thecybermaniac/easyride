@@ -43,7 +43,7 @@ npm install
 
 **Setup Environment Variables**
 
-This application was built with multiple third-party services including [Clerk](https://clerk.com) for authentication, and [Neon](https://neon.tech). To make sure it works properly, you need to get the API keys as specificied below. Then, create a new file named `.env.local` in the root of your project and add them:
+This application was built with multiple third-party services including [Clerk](https://clerk.com) for authentication, [Neon](https://neon.tech) for database, and [Stripe](https://stripe.com) as the payment gateway. To make sure it works properly, you need to get the API keys as specificied below. Then, create a new file named `.env.local` in the root of your project and add them:
 
 ```ini
 EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY=p
