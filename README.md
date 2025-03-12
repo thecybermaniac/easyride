@@ -1,50 +1,67 @@
-# Welcome to your Expo app 👋
+# Welcome to EasyRide 👋
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+This is an [Expo](https://expo.dev) ride booking mobile application, that allows users to select different drivers and book them for a ride anywhere!
+
+![EasyRide](/assets/images/thumbnail.png)
+
+## Features
+
+-   [x] Easy authentication for users, including Google sign-in.
+-   [x] A wonderful UI with a map and map markers for indicating rides.
+-   [x] Location based ride suggestions
+-   [x] Preferred driver selection and booking
+-   [x] Autocomplete location searchbar
+-   [x] Distance and price calculation
+-   [x] Seemless payment with Stripe
+-   [x] User information update feature
+-   [x] Multi-step onboarding screen
 
 ## Get started
 
-1. Install dependencies
+Follow these steps to set up the project locally on your machine.
 
-   ```bash
-   npm install
-   ```
+Prerequisites
 
-2. Start the app
+Make sure you have the following installed on your machine:
 
-   ```bash
-    npx expo start
-   ```
+- [Git](https://git-scm.com/)
+- [Node.js](https://nodejs.org/en)
+- [npm](https://www.npmjs.com/) (Node Package Manager)
 
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+**Cloning the Repository**
 
 ```bash
-npm run reset-project
+git clone https://github.com/thecybermaniac/easyride.git
+cd easyride
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+**Installation**
 
-## Learn more
+```bash
+npm install
+```
 
-To learn more about developing your project with Expo, look at the following resources:
+**Setup Environment Variables**
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+This application was built with multiple third-party services including [Clerk](https://clerk.com) for authentication, and [Neon](https://neon.tech). To make sure it works properly, you need to get the API keys as specificied below. Then, create a new file named `.env.local` in the root of your project and add them:
 
-## Join the community
+```ini
+EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY=p
+DATABASE_URL=
+EXPO_PUBLIC_SERVER_URL=https://uber.dev/
+EXPO_PUBLIC_GEOAPIFY_API_KEY=
+EXPO_PUBLIC_GOOGLE_API_KEY=
+EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY=
+STRIPE_SECRET_KEY=
+EXPO_PUBLIC_OPENROUTE_KEY=
+```
 
-Join our community of developers creating universal apps.
+Replace the placeholder values with your actual API credentials.
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+**Running the Project**
+
+```bash
+npx expo start
+```
+
+View the application using an emulator or your device with Expo Go.
