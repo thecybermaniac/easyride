@@ -4,7 +4,7 @@ import CustomButton from "./CustomButton";
 import { useStripe } from "@stripe/stripe-react-native";
 import { fetchAPI } from "@/lib/fetch";
 import { PaymentProps } from "@/types/type";
-import { useLocationStore } from "@/store";
+import { useDriverStore, useLocationStore } from "@/store";
 import { useAuth } from "@clerk/clerk-expo";
 import ReactNativeModal from "react-native-modal";
 import { images } from "@/constants";
@@ -28,6 +28,9 @@ const Payment = ({
     destinationLatitude,
     destinationLongitude,
   } = useLocationStore();
+  const { drivers, setDrivers, selectedDriver } = useDriverStore();
+
+  const newDrivers = drivers?.filter((driver) => +driver.id !== selectedDriver);
 
   const initializePaymentSheet = async () => {
     const { paymentIntent, ephemeralKey, customer } = await fetchAPI(
@@ -93,6 +96,7 @@ const Payment = ({
         Alert.alert(`Error code: ${error.code}`, error.message);
       } else {
         await createRide();
+        setDrivers(newDrivers);
         setSuccess(true);
       }
     } catch (error) {

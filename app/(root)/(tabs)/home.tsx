@@ -1,4 +1,3 @@
-import GoogleTextInput from "@/components/GoogleTextInput";
 import Map from "@/components/Map";
 import PlaceAutocompleteInput from "@/components/PlaceAutocompleteInput";
 import RideCard from "@/components/RideCard";
@@ -24,10 +23,10 @@ export default function Page() {
   const { user } = useUser();
   const { signOut } = useAuth();
   const { data: recentRides, loading } = useFetch(`/(api)/ride/${user?.id}`);
-  const [hasPermisson, setHasPermission] = useState(false);
+  const [hasPermission, setHasPermission] = useState(false);
 
-  const handleSignOut = () => {
-    signOut();
+  const handleSignOut = async () => {
+    await signOut();
     router.replace("/(auth)/sign-in");
   };
   const handleDestinationPress = (location: {
@@ -49,21 +48,25 @@ export default function Page() {
         return;
       }
 
-      let location = await Location.getCurrentPositionAsync();
+      if(hasPermission) {
 
-      const address = await Location.reverseGeocodeAsync({
-        latitude: location.coords?.latitude!,
-        longitude: location.coords?.longitude!,
-      });
+        let location = await Location.getCurrentPositionAsync();
 
-      setUserLocation({
-        latitude: location.coords?.latitude!,
-        longitude: location.coords?.longitude!,
-        address: `${address[0].name}, ${address[0].region}`,
-      });
-    };
+        const address = await Location.reverseGeocodeAsync({
+          latitude: location.coords?.latitude!,
+          longitude: location.coords?.longitude!,
+        });
 
-    requestLocation();
+        setUserLocation({
+          latitude: location.coords?.latitude!,
+          longitude: location.coords?.longitude!,
+          address: `${address[0].name}, ${address[0].region}`,
+        });
+      }
+      }
+
+
+    requestLocation().catch((error) => console.log(error));
   }, []);
 
   return (
